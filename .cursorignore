@@ -1,0 +1,9 @@
+.venv/
+logs/
+wandb/
+.git/
+__pycache__/
+*.pt
+*.onnx
+*.npz
+*.csv
