@@ -27,16 +27,14 @@ The first milestone is a trustworthy walking experiment, not a novel trick.
 The owner has identified the following Phase 1 sequence:
 
 1. environment setup — done-ish;
-2. first walking policy — reported done;
-3. change a small number of reward weights;
-4. train a second walking policy;
-5. evaluate A/B with a reusable walking benchmark;
-6. implement and study an original reward function.
+2. first walking policy — Policy A named (`mdnezvfu`, iter 3000);
+3. one controlled reward change — done (Policy B: entire `action_rate_l2` schedule ×2);
+4. train a second walking policy — done (Colab T4, matched seed/envs/budget);
+5. evaluate A/B with a reusable walking benchmark — **done once**; A remains the walking champion;
+6. next training (when Colab quota returns): Policy C, then later an original reward function.
 
 “Done” means the activity has happened at least once. It does not necessarily
-mean that the result is reproducible, well-labelled, or understood yet. The
-remaining work in Phase 1 is therefore about turning an existing first run
-into a controlled engineering experiment.
+mean that the result is reproducible, well-labelled, or understood yet.
 
 Phase 1 is divided into short gates:
 
@@ -50,7 +48,7 @@ uses CUDA while Mac evaluation uses CPU MuJoCo and ONNX Runtime.
 
 ### Phase 1B — Baseline walking policy
 
-Status: first policy reportedly trained.
+Status: done (provenance recorded in [`MINUTES.md`](MINUTES.md)).
 
 Identify the exact W&B run, task ID, seed if known, environment count,
 checkpoint, and code state. A policy without provenance is a useful
@@ -58,12 +56,20 @@ demonstration but not yet a reliable experimental baseline.
 
 ### Phase 1C — One controlled reward change
 
+Status: done.
+
 Choose one hypothesis, preferably a modest change to action smoothness for the
 first experiment. Keep the task, observations, commands, robot model,
 actuator model, domain randomization, training budget, and evaluation protocol
 constant.
 
+The first live change was **×2 on the whole `action_rate_l2` curriculum** (not
+the obsolete four-weight “Run #2” note). That is one variable; it was a large
+dose.
+
 ### Phase 1D — Second policy
+
+Status: done.
 
 Train policy B under matched conditions. The purpose is not merely to obtain a
 higher reward; it is to learn how a code/configuration change propagates
@@ -71,10 +77,24 @@ through training, behavior, metrics, and deployment rehearsal.
 
 ### Phase 1E — A/B evaluation
 
+Status: first loop complete.
+
 Build a reusable evaluator for the walking task first. “Universal” means
 universal across the Phase 1 walking experiments, not a premature framework
 for every future skill. The evaluator should eventually accept two policies,
 run identical command/trial batteries, and emit comparable CSV/JSON results.
+
+That tool now lives at [`scripts/eval_walk.py`](scripts/eval_walk.py). Do not
+use [`scripts/eval_and_promote.py`](scripts/eval_and_promote.py) (dummy metrics).
+Zero falls is not a walking win: read `vx_0.2` `lin_vel_rmse` and `xy_drift`
+(0.2 m/s × 10 s ≈ 2 m). The first A/B showed B quieter by **idling** on small
+commands. **A stays champion.** Automatic `B_wins_smoothness` from overall
+lin RMSE is the letter of a weak rule, not the scientific result.
+
+**Policy C (queued, not trained):** A’s `action_rate` stages through iter 1250;
+only the 1500 stage is **−1.25** (A was −1.0). Same 3000-iter Colab T4 budget
+when quota returns. Hugging Face Jobs is the repo-preferred GPU path; the
+owner is staying on Colab and using Mac/CPU work between quota resets.
 
 ### Phase 1F — Original reward engineering
 
@@ -211,11 +231,14 @@ The Mac is the local learning and evaluation workstation:
 - use `play` where supported;
 - export checkpoints where possible;
 - run ONNX Runtime with the BAM actuator rehearsal;
-- create plots, videos, and reports.
+- create plots, videos, and reports;
+- run [`scripts/eval_walk.py`](scripts/eval_walk.py) (headless mjlab, CPU).
 
 Large-scale PPO training belongs on a Linux/NVIDIA CUDA machine or a managed
-GPU service. Hugging Face Jobs is the repository-supported remote route; Colab
-is acceptable for initial experiments if it is the available option.
+GPU service. Hugging Face Jobs (`uv run train … --hf-jobs`) is the
+repository-supported remote route. Colab remains acceptable while quota lasts:
+smoke (64 envs, 5 iters) before every 3000-iter run, and always pass
+`--agent.max-iterations 3000` (cfg default is 50_000).
 
 The first action on any CUDA machine is the inexpensive smoke test:
 
@@ -324,6 +347,11 @@ The first command battery should stay within the training distribution:
 - modest positive and negative lateral commands;
 - modest positive and negative turn-in-place commands.
 
+Operator check before any “smoother” claim: at `vx = 0.2` for ~10 s, did the
+duck **leave the spawn**? 0.2 m/s × 10 s = 2 m. If `xy_drift` ≈ 2 m and
+`lin_vel_rmse` ≈ 0.2, the policy idled. Do not score overall lin RMSE (stand
+and turn with `vx = 0` hide that). Viser is a footnote after the CSV.
+
 Each trial should eventually record:
 
 - policy and checkpoint;
@@ -354,14 +382,19 @@ factor while preserving:
 - domain randomization;
 - evaluation scenarios.
 
-The recommended first hypothesis is:
+The first hypothesis that was actually trained:
 
-> A moderately stronger action-rate penalty may reduce action jitter while
-> preserving survival and velocity tracking.
+> A 2× `action_rate_l2` schedule (every curriculum stage) may reduce action
+> jitter while preserving survival and velocity tracking.
 
-The live walking configuration currently ramps `action_rate_l2` from `-0.1`
-to `-1.0` by approximately iteration 1500. Any B change must state whether it
-tests the early bootstrapping stage, the final gait, or the whole schedule.
+Result (eval, not W&B): survival held; at `vx = 0.2` and turn-in-place, B’s
+error matched the command and `xy_drift` ≈ 2 m — freeze, not a calmer gait.
+Taxing stepping **from iteration 0** made idle cheaper than walking at small
+commands (tracking `std ≈ 0.32` m/s still pays ~67% when standing vs 0.2 m/s).
+
+The stock A schedule ramps `action_rate_l2` from `-0.1` to `-1.0` by
+iteration 1500. Any later change must state whether it tests early bootstrap,
+the final gait, or the whole schedule. Policy C tests **only the last stage**.
 
 Compare:
 

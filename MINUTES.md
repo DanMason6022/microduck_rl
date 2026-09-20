@@ -376,3 +376,88 @@ This snapshot is the training log at crash time, not a walking benchmark.
 Phase 1B identification is recorded. No playback, ONNX export, reward-config
 edit, or Policy B training was done in this session. Phase 1C (one controlled
 reward change) has not started.
+
+---
+
+## 2026-09-20 — Phase 1C–1E: 2× smoothness, walking eval, idle basin
+
+Work from this laptop plus Colab, spanning git hygiene, Policy B training,
+and the first measured A/B. Lavender livery was kept **out** of the reward
+comparison (own commit on `main`; XML left stock).
+
+### Git
+
+- Fork: https://github.com/DanMason6022/microduck_rl (`origin` / `mine`).
+- `upstream` = `pollen-robotics/microduck_rl` (fetch only; do not push).
+- Experiment branch: `phase-1c-changing-training-weights` (tracks the fork).
+- Fork `main` tip at documentation time: livery commit `c470887`.
+
+### Phase 1C / 1D — Policy B
+
+Hypothesis: 2× the whole `action_rate_l2` curriculum vs Policy A, nothing else
+changed (not the old four-weight “Run #2” note).
+
+A (OOB) stages: `-0.1, -0.2, -0.4, -0.6, -0.8, -1.0` by iter 1500.  
+B (trained): each stage ×2, ending **-2.0**.
+
+| Field | Policy B |
+|---|---|
+| Task | `Mjlab-Velocity-Flat-MicroDuck` |
+| W&B | `danielmason2206-personal/mjlab_microduck/arbfiaxm` |
+| Checkpoint used in eval | `model_2999.pt` (local cache; 1 iter off 3000) |
+| Seed / envs / budget | 42 / 4096 / ~3000 iters (matched to A) |
+| GPU | Colab T4 |
+
+W&B at ~3k looked similar to A except `Episode_Reward/track_angular_velocity`
+~0.74 → ~0.81. That is a **weighted training term**, not “turns better.”
+
+### Phase 1E — walking battery
+
+- Built headless [`scripts/eval_walk.py`](scripts/eval_walk.py) (mjlab `.pt` /
+  same stack as `play`): frozen twist, no pushes, CSV/JSON.
+- Do **not** use [`scripts/eval_and_promote.py`](scripts/eval_and_promote.py)
+  (calls missing `benchmark_policy`, dummy `0.050` on parse fail).
+- Protocol: 10 s, seeds 0–4, stand / vx 0.2 / 0.4 / ±vy / ±wz.
+- Outputs: `results/eval_A/`, `results/eval_B/`,
+  `results/eval_AB/compare.json` and `compare.txt`.
+- Eval A checkpoint path was the misnamed cache folder `391ofvzp`; bytes match
+  Policy A (`mdnezvfu`). Still name A as `mdnezvfu`.
+
+**Result (35/35 trials, no falls on either policy):** zero falls is expected
+(flat, no pushes, 10 s). B did **not** walk better.
+
+| Case | A | B | Read |
+|---|---|---|---|
+| stand action-rate RMS | 0.079 | 0.061 | B slightly quieter (real) |
+| vx=0.2 lin RMSE | 0.175 | **0.199** | B error ≈ the command |
+| vx=0.2 xy_drift | 0.78 m | **1.99 m** | missing the 2 m walk |
+| turn ±0.5 ang RMSE | 0.23–0.31 | **~0.49** | B not spinning |
+
+B’s action-rate collapse on `vx=0.2` matches **stand**, not a calm gait.
+Tracking Gaussian `std ≈ 0.32` m/s still pays ~67% if you stand vs a 0.2 m/s
+command, so a heavy action-rate tax from iter 0 makes idle the cheap basin.
+
+Automatic compare label `B_wins_smoothness` is **wrong for walking**: overall
+lin RMSE helped B because stand/turn have `vx=0`. **A remains champion.**
+
+Operator check (no agent): Viser at vx=0.2 — did it leave the spawn? CSV:
+`lin_vel_rmse` glued to 0.2 and `xy_drift` ≈ 2 m ⇒ freeze.
+
+### Policy C (queued)
+
+Not trained. Colab quota exhausted. Stay on Colab; HF Jobs is the preferred
+repo path later (`l4x1` / T4-medium, smoke first). Between resets: Mac eval,
+ONNX rehearsal, 1F spec on paper — not another 2× schedule.
+
+C config intent: **A’s stages through 1250**, only iter **1500 = −1.25**.
+Same 3000 iters, seed 42, 4096 envs. Must pass `--agent.max-iterations 3000`.
+A wandb/HF run name is a **label** (notes or `--agent.run-name`), not a file.
+
+Pass for C vs A: walks at 0.2 (drift not ~2 m) **and** quieter on those
+walking trials. Freeze again ⇒ A stays champion.
+
+### Status
+
+1A–1E first loop complete. 1F not started. C not trained. Working tree on
+`phase-1c-changing-training-weights` also holds uncommitted eval code, results,
+and the C `action_rate` stages — not yet a clean push.

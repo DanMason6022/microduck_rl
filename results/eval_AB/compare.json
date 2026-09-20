@@ -1,0 +1,813 @@
+{
+  "eval_A": "results/eval_A",
+  "eval_B": "results/eval_B",
+  "policy_A": {
+    "policy_label": "A",
+    "wandb_run": "danielmason2206-personal/mjlab_microduck/391ofvzp",
+    "checkpoint": "/Users/dan/microduck_rl/logs/rsl_rl/velocity/wandb_checkpoints/391ofvzp/model_3000.pt",
+    "git_sha": "a8fe9b73ec98eeedf3320156abc055ad1413a781"
+  },
+  "policy_B": {
+    "policy_label": "B",
+    "wandb_run": "danielmason2206-personal/mjlab_microduck/arbfiaxm",
+    "checkpoint": "/Users/dan/microduck_rl/logs/rsl_rl/velocity/wandb_checkpoints/arbfiaxm/model_2999.pt",
+    "git_sha": "a8fe9b73ec98eeedf3320156abc055ad1413a781"
+  },
+  "protocol_A": {
+    "task": "Mjlab-Velocity-Flat-MicroDuck",
+    "horizon_s": 10.0,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "num_envs": 5,
+    "device": "cpu",
+    "pushes": "disabled",
+    "commands": "frozen_twist_zero_pose",
+    "domain_randomization": "reset_time_on_fixed_seeds",
+    "control_hz_hint": 50.0,
+    "step_dt": 0.02,
+    "extra_ood": false,
+    "git_sha": "a8fe9b73ec98eeedf3320156abc055ad1413a781"
+  },
+  "protocol_B": {
+    "task": "Mjlab-Velocity-Flat-MicroDuck",
+    "horizon_s": 10.0,
+    "seeds": [
+      0,
+      1,
+      2,
+      3,
+      4
+    ],
+    "num_envs": 5,
+    "device": "cpu",
+    "pushes": "disabled",
+    "commands": "frozen_twist_zero_pose",
+    "domain_randomization": "reset_time_on_fixed_seeds",
+    "control_hz_hint": 50.0,
+    "step_dt": 0.02,
+    "extra_ood": false,
+    "git_sha": "a8fe9b73ec98eeedf3320156abc055ad1413a781"
+  },
+  "verdict": {
+    "decision": "B_wins_smoothness",
+    "champion": "B",
+    "smoothness_win": true,
+    "smoothness_by_case": {
+      "stand": true,
+      "vx_0.2": true
+    },
+    "fall_ok": true,
+    "tracking_ok": true,
+    "fall_rate_A": 0.0,
+    "fall_rate_B": 0.0,
+    "lin_vel_rmse_A": 0.16128043519066912,
+    "lin_vel_rmse_B": 0.1408679404162935,
+    "thresholds": {
+      "smoothness_cases": [
+        "stand",
+        "vx_0.2"
+      ],
+      "fall_rate_tol_pp": 0.05,
+      "lin_rmse_rel_tol": 0.1
+    },
+    "note": "Yaw RMSE is secondary. A W&B track_angular_velocity bump without ang_vel_rmse improvement is not a win. No auto-promotion."
+  },
+  "reading": {
+    "notes": [
+      "B vx_0.2 lin_vel_rmse is close to the 0.2 m/s command; that is 'barely walking / standing', not a calmer gait.",
+      "B vx_0.2 xy_drift \u2248 2 m over 10 s is the missing integrated walk (commanded 0.2 m/s \u00d7 10 s). Action-rate drop there is freeze.",
+      "B turn-in-place ang_vel_rmse \u2248 |cmd|; it is not spinning.",
+      "Zero falls is expected on this battery: 10 s, flat, no pushes, in-distribution commands. Survival is a floor, not the 1C score.",
+      "Do not trust overall lin_vel_rmse alone: stand/turn cases with cmd_xy=0 pull the mean down if B refuses to walk."
+    ],
+    "vx_0.2_lin_vel_rmse": {
+      "A": 0.1750630497932434,
+      "B": 0.19943034946918486
+    },
+    "vx_0.2_xy_drift": {
+      "A": 0.7840816140174866,
+      "B": 1.9936334371566773
+    },
+    "vx_0.2_action_rate_rms": {
+      "A": 0.3291094064712524,
+      "B": 0.0539343036711216
+    }
+  },
+  "aggregates": {
+    "A": {
+      "by_case": {
+        "stand": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.004465370438992977,
+            "std": 0.0004850985643794887,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.02754643075168133,
+            "std": 0.014293679899559817,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.0786751851439476,
+            "std": 0.00431809255145082,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11617701947689056,
+            "std": 0.00033376904471533125,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.010804025828838349,
+            "std": 0.005125948682468841,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 0.0006872779777040705,
+            "std": 0.00035352740097184613,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.2": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.1750630497932434,
+            "std": 0.015884832590905597,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.3577289700508118,
+            "std": 0.05784078752784464,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.3291094064712524,
+            "std": 0.015085222107789863,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11883037388324738,
+            "std": 0.0010252584809355822,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.059010982513427734,
+            "std": 0.016875166723315696,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 0.7840816140174866,
+            "std": 0.2658664980034692,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.4": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.2212565213441849,
+            "std": 0.018834869594082523,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.34766725897789,
+            "std": 0.04741951810399014,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.4096216857433319,
+            "std": 0.019220056908402627,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11898747682571412,
+            "std": 0.001281034352105767,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.060639874637126924,
+            "std": 0.012855408889441207,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 1.5823891162872314,
+            "std": 0.19931851870731618,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.3_vy_p0.1": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.2188676118850708,
+            "std": 0.005531685843428066,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.32329161167144777,
+            "std": 0.05860346149275755,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.3734941124916077,
+            "std": 0.026892670076420815,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11885121911764145,
+            "std": 0.0011488315816361677,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.05617627277970314,
+            "std": 0.019309363138891956,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 1.421563482284546,
+            "std": 0.08376576488228318,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.3_vy_m0.1": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.20553466379642488,
+            "std": 0.023000438559572765,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.36038615703582766,
+            "std": 0.09665160615109403,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.3745460331439972,
+            "std": 0.006642750242634088,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11882020831108094,
+            "std": 0.0014025786918481608,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.06011829599738121,
+            "std": 0.013631165736541035,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 1.2181328058242797,
+            "std": 0.35495026910766514,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "wz_p0.5": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.15222008526325226,
+            "std": 0.008119680029615925,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.2344337821006775,
+            "std": 0.04484741530199575,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.293576717376709,
+            "std": 0.003755407021420267,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11843954920768737,
+            "std": 0.0006676232928852772,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.059800708293914796,
+            "std": 0.027268966258544563,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 0.036048933118581775,
+            "std": 0.023412213517977475,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "wz_m0.5": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.15155574381351472,
+            "std": 0.0049393251161434825,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.31057007908821105,
+            "std": 0.023515703422852762,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.29504221081733706,
+            "std": 0.017156419944165436,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11772367358207703,
+            "std": 0.0007816223767173328,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.06371075361967087,
+            "std": 0.025131316204766035,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 0.015852862782776356,
+            "std": 0.003621622154042692,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        }
+      },
+      "overall_in_distribution": {
+        "survival_s": {
+          "mean": 10.0,
+          "std": 0.0,
+          "n": 35
+        },
+        "lin_vel_rmse": {
+          "mean": 0.16128043519066912,
+          "std": 0.07157394804098362,
+          "n": 35
+        },
+        "ang_vel_rmse": {
+          "mean": 0.28023204138236385,
+          "std": 0.12284070850977796,
+          "n": 35
+        },
+        "action_rate_rms": {
+          "mean": 0.30772362159831185,
+          "std": 0.10418367916376414,
+          "n": 35
+        },
+        "mean_trunk_z": {
+          "mean": 0.1182613600577627,
+          "std": 0.0013225666921582323,
+          "n": 35
+        },
+        "tilt_rms": {
+          "mean": 0.05289441623858043,
+          "std": 0.024328538186640342,
+          "n": 35
+        },
+        "xy_drift": {
+          "mean": 0.7226794417560866,
+          "std": 0.6821577305047642,
+          "n": 35
+        },
+        "fall_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "n": 35
+        },
+        "n": 35
+      }
+    },
+    "B": {
+      "by_case": {
+        "stand": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.00409348476678133,
+            "std": 0.00040420674521824936,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.01895813662558794,
+            "std": 0.0050703074521150655,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.06050333976745605,
+            "std": 0.0038437945201330185,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11624156683683395,
+            "std": 0.0002762984541972271,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.01420461954548955,
+            "std": 0.008714062162815247,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 0.002384024066850543,
+            "std": 0.0007418128324948388,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.2": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.19943034946918486,
+            "std": 8.99953020529086e-05,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.0181115647777915,
+            "std": 0.00574337533217828,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.0539343036711216,
+            "std": 0.004059335387256815,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11550920307636262,
+            "std": 0.00025363269266228804,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.019477868266403676,
+            "std": 0.013430147272678106,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 1.9936334371566773,
+            "std": 0.0006490415077649862,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.4": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.273907345533371,
+            "std": 0.019738828251719187,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.31437486708164214,
+            "std": 0.05747703629671286,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.30738856792449953,
+            "std": 0.018168835790806928,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11902065873146057,
+            "std": 0.0009790336817464443,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.062007302045822145,
+            "std": 0.008286824584004055,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 2.1161458253860475,
+            "std": 0.3125508865786807,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.3_vy_p0.1": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.2505204647779465,
+            "std": 0.004760831709602365,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.27353437542915343,
+            "std": 0.03536793183360716,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.29403506517410277,
+            "std": 0.024301276251859787,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11791215986013412,
+            "std": 0.0008854814423377399,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.0526032954454422,
+            "std": 0.01441604181136263,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 1.8017333507537843,
+            "std": 0.10376704092059363,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "vx_0.3_vy_m0.1": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.2505490630865097,
+            "std": 0.025982410993269013,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.26611771881580354,
+            "std": 0.08032313884436067,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.2828403115272522,
+            "std": 0.02789357141048479,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11812955737113953,
+            "std": 0.0012242943516898605,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.04793418049812317,
+            "std": 0.01100303700821035,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 1.8708050966262817,
+            "std": 0.3939625052531484,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "wz_p0.5": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.0037046320736408233,
+            "std": 0.0014903838475799503,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.49069836735725403,
+            "std": 0.002225461552461373,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.05648956373333931,
+            "std": 0.005771848104453235,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11585976630449295,
+            "std": 0.0003990053598294311,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.02132545509375632,
+            "std": 0.023445558225865484,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 0.004072130704298615,
+            "std": 0.0007609822535758882,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        },
+        "wz_m0.5": {
+          "survival_s": {
+            "mean": 10.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "lin_vel_rmse": {
+            "mean": 0.0038702432066202164,
+            "std": 0.0022426055683072523,
+            "n": 5
+          },
+          "ang_vel_rmse": {
+            "mean": 0.48863648176193236,
+            "std": 0.0015599001789337859,
+            "n": 5
+          },
+          "action_rate_rms": {
+            "mean": 0.05556219965219498,
+            "std": 0.005859697873693981,
+            "n": 5
+          },
+          "mean_trunk_z": {
+            "mean": 0.11613028794527054,
+            "std": 0.0002490300743945743,
+            "n": 5
+          },
+          "tilt_rms": {
+            "mean": 0.0273547675460577,
+            "std": 0.013359173855765355,
+            "n": 5
+          },
+          "xy_drift": {
+            "mean": 0.003112667566165328,
+            "std": 0.0011629029712798232,
+            "n": 5
+          },
+          "fall_rate": {
+            "mean": 0.0,
+            "std": 0.0,
+            "n": 5
+          },
+          "ood": false,
+          "n": 5
+        }
+      },
+      "overall_in_distribution": {
+        "survival_s": {
+          "mean": 10.0,
+          "std": 0.0,
+          "n": 35
+        },
+        "lin_vel_rmse": {
+          "mean": 0.1408679404162935,
+          "std": 0.12268317240943324,
+          "n": 35
+        },
+        "ang_vel_rmse": {
+          "mean": 0.26720450169273785,
+          "std": 0.18541661371912893,
+          "n": 35
+        },
+        "action_rate_rms": {
+          "mean": 0.15867905020713807,
+          "std": 0.120645073080999,
+          "n": 35
+        },
+        "mean_trunk_z": {
+          "mean": 0.11697188573224204,
+          "std": 0.0014308774899891876,
+          "n": 35
+        },
+        "tilt_rms": {
+          "mean": 0.03498678406301354,
+          "std": 0.021797902499716415,
+          "n": 35
+        },
+        "xy_drift": {
+          "mean": 1.1131266474657293,
+          "std": 0.9953132558517687,
+          "n": 35
+        },
+        "fall_rate": {
+          "mean": 0.0,
+          "std": 0.0,
+          "n": 35
+        },
+        "n": 35
+      }
+    }
+  }
+}
