@@ -878,7 +878,9 @@ def main():
     else:
         xml_path = MICRODUCK_XML
     print(f"Loading MuJoCo model from: {xml_path}")
-    model = mujoco.MjModel.from_xml_path(xml_path)
+    from mjlab_microduck.robot.livery import apply_lavender_livery
+    spec = apply_lavender_livery(mujoco.MjSpec.from_file(xml_path))
+    model = spec.compile()
     model.opt.timestep = 0.005
     data = mujoco.MjData(model)
 

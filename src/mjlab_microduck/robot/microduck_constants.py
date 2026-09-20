@@ -9,7 +9,7 @@ from mjlab_microduck.actuator import (
 )
 from mjlab.entity import EntityArticulationInfoCfg, EntityCfg
 from mjlab.utils.spec_config import CollisionCfg
-
+from .livery import apply_lavender_livery
 
 _ROBOT_DIR: Path = Path(os.path.dirname(__file__)) / "microduck"
 
@@ -35,39 +35,40 @@ assert MICRODUCK_ALLCOLLISIONS_BACKLASH_XML.exists(), f"XML not found: {MICRODUC
 assert MICRODUCK_WALK_BACKLASH_XML.exists(), f"XML not found: {MICRODUCK_WALK_BACKLASH_XML}"
 assert MICRODUCK_ALLCOLLISIONS_ROLLERS_BACKLASH_XML.exists(), f"XML not found: {MICRODUCK_ALLCOLLISIONS_ROLLERS_BACKLASH_XML}"
 
-
+def _load_robot_spec(xml: Path) -> mujoco.MjSpec:
+    return apply_lavender_livery(mujoco.MjSpec.from_file(str(xml)))
 def get_walk_spec() -> mujoco.MjSpec:
-    return mujoco.MjSpec.from_file(str(MICRODUCK_WALK_XML))
+    return _load_robot_spec(MICRODUCK_WALK_XML)
 
 
 def get_standup_spec() -> mujoco.MjSpec:
-    return mujoco.MjSpec.from_file(str(MICRODUCK_ALLCOLLISIONS_XML))
+    return _load_robot_spec(MICRODUCK_ALLCOLLISIONS_XML)
 
 
 def get_ground_pick_spec() -> mujoco.MjSpec:
-    return mujoco.MjSpec.from_file(str(MICRODUCK_ALLCOLLISIONS_XML))
+    return _load_robot_spec(MICRODUCK_ALLCOLLISIONS_XML)
 
 
 def get_walk_rollers_spec() -> mujoco.MjSpec:
     # NOTE: was loading robot_allcollisions.xml (no wheels) — the roller env
     # silently ran on the wheel-less standup model.
-    return mujoco.MjSpec.from_file(str(MICRODUCK_ALLCOLLISIONS_ROLLERS_XML))
+    return _load_robot_spec(MICRODUCK_ALLCOLLISIONS_ROLLERS_XML)
 
 
 def get_ball_spec() -> mujoco.MjSpec:
-    return mujoco.MjSpec.from_file(str(MICRODUCK_BALL_XML))
+    return _load_robot_spec(MICRODUCK_BALL_XML)
 
 
 def get_backlash_spec() -> mujoco.MjSpec:
-    return mujoco.MjSpec.from_file(str(MICRODUCK_ALLCOLLISIONS_BACKLASH_XML))
+    return _load_robot_spec(MICRODUCK_ALLCOLLISIONS_BACKLASH_XML)
 
 
 def get_walk_backlash_spec() -> mujoco.MjSpec:
-    return mujoco.MjSpec.from_file(str(MICRODUCK_WALK_BACKLASH_XML))
+    return _load_robot_spec(MICRODUCK_WALK_BACKLASH_XML)
 
 
 def get_rollers_backlash_spec() -> mujoco.MjSpec:
-    return mujoco.MjSpec.from_file(str(MICRODUCK_ALLCOLLISIONS_ROLLERS_BACKLASH_XML))
+    return _load_robot_spec(MICRODUCK_ALLCOLLISIONS_ROLLERS_BACKLASH_XML)
 
 
 HOME_FRAME = EntityCfg.InitialStateCfg(
