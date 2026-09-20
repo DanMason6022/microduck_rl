@@ -346,7 +346,7 @@ def make_microduck_velocity_env_cfg(
 
     # Action smoothness: stage-0 value; the action_rate_weight curriculum below
     # ramps it -0.1 → -1.0 by iter 1500.
-    cfg.rewards["action_rate_l2"].weight = -0.1
+    cfg.rewards["action_rate_l2"].weight = -0.2
 
     cfg.rewards["foot_clearance"].params["command_threshold"] = 0.01
     cfg.rewards["foot_clearance"].params["target_height"] = 0.02  # Increased from 0.01 to penalize dragging
@@ -781,11 +781,11 @@ def make_microduck_velocity_env_cfg(
             "reward_name": "action_rate_l2",
             "weight_stages": [
                 {"step": 0, "weight": -0.1},
-                {"step": 500 * NUM_STEPS_PER_ENV, "weight": -0.2},
-                {"step": 750 * NUM_STEPS_PER_ENV, "weight": -0.4},
-                {"step": 1000 * NUM_STEPS_PER_ENV, "weight": -0.6},
-                {"step": 1250 * NUM_STEPS_PER_ENV, "weight": -0.8},
-                {"step": 1500 * NUM_STEPS_PER_ENV, "weight": -1.0},
+                {"step": 500 * NUM_STEPS_PER_ENV, "weight": -0.4},
+                {"step": 750 * NUM_STEPS_PER_ENV, "weight": -0.8},
+                {"step": 1000 * NUM_STEPS_PER_ENV, "weight": -1.2},
+                {"step": 1250 * NUM_STEPS_PER_ENV, "weight": -1.6},
+                {"step": 1500 * NUM_STEPS_PER_ENV, "weight": -2.0},
             ],
         },
     )
