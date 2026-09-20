@@ -1,0 +1,62 @@
+Walking A/B  A vs B
+case                   metric                      A            B        delta
+------------------------------------------------------------------------------
+stand                  fall_rate              0.0000       0.0000      +0.0000
+stand                  lin_vel_rmse           0.0045       0.0041      -0.0004
+stand                  ang_vel_rmse           0.0275       0.0190      -0.0086
+stand                  action_rate_rms        0.0787       0.0605      -0.0182
+stand                  survival_s            10.0000      10.0000      +0.0000
+stand                  tilt_rms               0.0108       0.0142      +0.0034
+stand                  xy_drift               0.0007       0.0024      +0.0017
+
+vx_0.2                 fall_rate              0.0000       0.0000      +0.0000
+vx_0.2                 lin_vel_rmse           0.1751       0.1994      +0.0244
+vx_0.2                 ang_vel_rmse           0.3577       0.0181      -0.3396
+vx_0.2                 action_rate_rms        0.3291       0.0539      -0.2752
+vx_0.2                 survival_s            10.0000      10.0000      +0.0000
+vx_0.2                 tilt_rms               0.0590       0.0195      -0.0395
+vx_0.2                 xy_drift               0.7841       1.9936      +1.2096
+
+vx_0.3_vy_m0.1         fall_rate              0.0000       0.0000      +0.0000
+vx_0.3_vy_m0.1         lin_vel_rmse           0.2055       0.2505      +0.0450
+vx_0.3_vy_m0.1         ang_vel_rmse           0.3604       0.2661      -0.0943
+vx_0.3_vy_m0.1         action_rate_rms        0.3745       0.2828      -0.0917
+vx_0.3_vy_m0.1         survival_s            10.0000      10.0000      +0.0000
+vx_0.3_vy_m0.1         tilt_rms               0.0601       0.0479      -0.0122
+vx_0.3_vy_m0.1         xy_drift               1.2181       1.8708      +0.6527
+
+vx_0.3_vy_p0.1         fall_rate              0.0000       0.0000      +0.0000
+vx_0.3_vy_p0.1         lin_vel_rmse           0.2189       0.2505      +0.0317
+vx_0.3_vy_p0.1         ang_vel_rmse           0.3233       0.2735      -0.0498
+vx_0.3_vy_p0.1         action_rate_rms        0.3735       0.2940      -0.0795
+vx_0.3_vy_p0.1         survival_s            10.0000      10.0000      +0.0000
+vx_0.3_vy_p0.1         tilt_rms               0.0562       0.0526      -0.0036
+vx_0.3_vy_p0.1         xy_drift               1.4216       1.8017      +0.3802
+
+vx_0.4                 fall_rate              0.0000       0.0000      +0.0000
+vx_0.4                 lin_vel_rmse           0.2213       0.2739      +0.0527
+vx_0.4                 ang_vel_rmse           0.3477       0.3144      -0.0333
+vx_0.4                 action_rate_rms        0.4096       0.3074      -0.1022
+vx_0.4                 survival_s            10.0000      10.0000      +0.0000
+vx_0.4                 tilt_rms               0.0606       0.0620      +0.0014
+vx_0.4                 xy_drift               1.5824       2.1161      +0.5338
+
+wz_m0.5                fall_rate              0.0000       0.0000      +0.0000
+wz_m0.5                lin_vel_rmse           0.1516       0.0039      -0.1477
+wz_m0.5                ang_vel_rmse           0.3106       0.4886      +0.1781
+wz_m0.5                action_rate_rms        0.2950       0.0556      -0.2395
+wz_m0.5                survival_s            10.0000      10.0000      +0.0000
+wz_m0.5                tilt_rms               0.0637       0.0274      -0.0364
+wz_m0.5                xy_drift               0.0159       0.0031      -0.0127
+
+wz_p0.5                fall_rate              0.0000       0.0000      +0.0000
+wz_p0.5                lin_vel_rmse           0.1522       0.0037      -0.1485
+wz_p0.5                ang_vel_rmse           0.2344       0.4907      +0.2563
+wz_p0.5                action_rate_rms        0.2936       0.0565      -0.2371
+wz_p0.5                survival_s            10.0000      10.0000      +0.0000
+wz_p0.5                tilt_rms               0.0598       0.0213      -0.0385
+wz_p0.5                xy_drift               0.0360       0.0041      -0.0320
+
+decision: B_wins_smoothness  champion: B
+smoothness_win=True  fall_ok=True  tracking_ok=True
+Yaw RMSE is secondary. A W&B track_angular_velocity bump without ang_vel_rmse improvement is not a win. No auto-promotion.
